@@ -106,11 +106,6 @@ if blur.Enabled == false then
     local label = section1:Label("Hitbox & Dot Lock")
 
 
-
-    local toggle = section:Toggle({Name = "Toggle", Flag = "Toggle", callback = function(bool)
-        
-     end})
-
     --// an silent aim
     local box = section1:Box({Name = "Enter Prediction", Flag = "Enter Prediction", Callback = function(pest)
         Settings = {
@@ -441,6 +436,24 @@ if blur.Enabled == false then
                 if Enabled == true then
                     repeat
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * getgenv().Multiplier
+                        for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                            if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+                                v:Destroy()
+                            end
+                        end
+                        game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+                            repeat
+                                wait()
+                            until game.Players.LocalPlayer.Character
+                            char.ChildAdded:Connect(function(child)
+                                if child:IsA("Script") then 
+                                    wait(0.1)
+                                    if child:FindFirstChild("LocalScript") then
+                                        child.LocalScript:FireServer()
+                                    end
+                                end
+                            end)
+                        end)
                         runService.Stepped:wait()
                     until Enabled == false
                 end
@@ -452,28 +465,6 @@ if blur.Enabled == false then
     local slider = section2:Slider({Name = "Speed", Min = 1, Max = 5, Default = 5, Flag = "Speed", Callback = function(arg)
         getgenv().Multiplier = arg
     end})
-
-    local button = section2:Button({Name = "CFrame Gun Fix", Callback = function(arg)
-        for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-            if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
-                v:Destroy()
-            end
-        end
-        game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-            repeat
-                wait()
-            until game.Players.LocalPlayer.Character
-            char.ChildAdded:Connect(function(child)
-                if child:IsA("Script") then 
-                    wait(0.1)
-                    if child:FindFirstChild("LocalScript") then
-                        child.LocalScript:FireServer()
-                    end
-                end
-            end)
-        end)
-    end})
-
 
     local button = section3:Button({Name = "Spinbot (V)", Callback = function()
         local L_165_ = false
